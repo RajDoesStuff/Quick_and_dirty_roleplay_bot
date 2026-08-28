@@ -1,14 +1,11 @@
-IMPORTANT!!!!
-if you want to run the bot yourself, 
-you need to make a ".env" file inside projects root directory 
-and add both your discord bot token and guild id!
+# quick and dirty bot for role playing on discord!
+## basic bot intended to aid discord role playing groups
 
-- ====== Inside .env file =======
-- DISCORD_TOKEN=[your token]
-- GUILD_ID=[guild id of a server you want to run the bot on]
--
-- ===============================
-
-DO NOT delete or edit .gitignore file when committing, 
-if you do so, you can potentially leak your discord bot token!
-
+Planned features:
+-[x] Basic dice rolling
+-[] Advanced dice rolling 
+-[] Character profiles
+-[] Location profiles
+-[] Custom item creator
+-[] Custom currency creator
+-[] User trading
