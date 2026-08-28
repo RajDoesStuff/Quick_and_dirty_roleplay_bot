@@ -1,5 +1,5 @@
 # Quick and Dirty RolePlaying Bot!
-## (QnDPR) basic bot intended to aid discord role playing groups
+## (QnDPR) basic bot intended to aid discord role playing and ttrpg groups
 
 Planned features:
 - [x] Basic dice rolling
