@@ -6,9 +6,11 @@ Planned features:
 - [ ] Advanced dice rolling 
 - [ ] Character profiles
 - [ ] Location profiles
-- [ ] Custom item creator
-- [ ] Custom currency creator
+- [ ] Custom items
+- [ ] Custom currencies
 - [ ] User trading
+- [ ] Game master role
+- [ ] Private thread opening for specified users and locations
 
 For setup instructions read "IMPORTANT_README"
 
