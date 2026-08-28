@@ -45,7 +45,7 @@ async def ping(interaction: discord.Interaction):
 # Help command with a list of functions
 @bot.tree.command(name='help', description='List of functions and commands', guild=GUILD)
 async def help_list(interaction: discord.Interaction):
-    #await interaction.response.send_message("List of available commands... not done yet tho o(╥﹏╥)o", ephemeral=True)
+    print(f"{interaction.user} run the 'help' command!")
     help_view = HelpComponent()
     await interaction.response.send_message(view=help_view, ephemeral=True)
 
@@ -70,7 +70,6 @@ async def roll(interaction: discord.Interaction, dice:str):
     else:
         await interaction.response.send_message("Invalid dice!", ephemeral=True)
         return
-    #await interaction.response.send_message(f"{interaction.user.mention} using {dice}\n rolled a {dice_roll_result}!")
 
     roll_view = RollComponent(dice, dice_roll_result,interaction.user)
     await interaction.response.send_message(view=roll_view)
@@ -79,7 +78,7 @@ async def roll(interaction: discord.Interaction, dice:str):
 @bot.tree.command(name='rollplus', description='an advanced dice roll', guild=GUILD)
 async def roll_plus(interaction: discord.Interaction, expression:str):
     print(f"{interaction.user} run the 'rollplus' command!")
-    await interaction.response.send_message(f"not done yet o(╥﹏╥)o")
+    await interaction.response.send_message("not done yet o(╥﹏╥)o")
 
 
 # Running the bot

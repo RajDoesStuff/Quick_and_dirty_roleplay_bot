@@ -45,9 +45,9 @@ class RollComponent(ui.LayoutView):
         super().__init__()
 
         section = ui.Section(
-            ui.TextDisplay(f"# {user.mention}"),
-            ui.TextDisplay("# Rolled a dice!"),
-            ui.TextDisplay(f"## using {dice} \n # rolled {dice_roll_result}!"),
+            ui.TextDisplay(f"### {user.mention}"),
+            ui.TextDisplay("### Rolled a dice!"),
+            ui.TextDisplay(f"### using {dice} \n ## rolled {dice_roll_result}!"),
             accessory=ui.Thumbnail(
                 media=user.display_avatar.url,
             )
