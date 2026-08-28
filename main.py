@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import os
 
 from cogs.dice_roller import dice_list, get_dice_list, dice_roll, advanced_dice_roll
+from message_components import HelpComponent, RollComponent
 
 # Loading bot token and guild id
 load_dotenv()
@@ -44,7 +45,9 @@ async def ping(interaction: discord.Interaction):
 # Help command with a list of functions
 @bot.tree.command(name='help', description='List of functions and commands', guild=GUILD)
 async def help_list(interaction: discord.Interaction):
-    await interaction.response.send_message("List of available commands... not done yet tho o(╥﹏╥)o", ephemeral=True)
+    #await interaction.response.send_message("List of available commands... not done yet tho o(╥﹏╥)o", ephemeral=True)
+    help_view = HelpComponent()
+    await interaction.response.send_message(view=help_view, ephemeral=True)
 
 # Dice roll related commands
 
@@ -62,13 +65,17 @@ async def roll(interaction: discord.Interaction, dice:str):
     for die in dice_list:
         if die.name == dice:
             dice_roll_result = dice_roll(die)
+
             break
     else:
         await interaction.response.send_message("Invalid dice!", ephemeral=True)
         return
-    await interaction.response.send_message(f"{interaction.user.mention} using {dice}\n rolled a {dice_roll_result}!")
+    #await interaction.response.send_message(f"{interaction.user.mention} using {dice}\n rolled a {dice_roll_result}!")
 
-# Performing an advance dice roll
+    roll_view = RollComponent(dice, dice_roll_result,interaction.user)
+    await interaction.response.send_message(view=roll_view)
+
+# Performing an advance dice roll - not done yet
 @bot.tree.command(name='rollplus', description='an advanced dice roll', guild=GUILD)
 async def roll_plus(interaction: discord.Interaction, expression:str):
     print(f"{interaction.user} run the 'rollplus' command!")
