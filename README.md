@@ -2,10 +2,10 @@
 ## basic bot intended to aid discord role playing groups
 
 Planned features:
--[x] Basic dice rolling
--[] Advanced dice rolling 
--[] Character profiles
--[] Location profiles
--[] Custom item creator
--[] Custom currency creator
--[] User trading
+- [x] Basic dice rolling
+- [ ] Advanced dice rolling 
+- [ ] Character profiles
+- [ ] Location profiles
+- [ ] Custom item creator
+- [ ] Custom currency creator
+- [ ] User trading
