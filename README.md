@@ -10,6 +10,8 @@ Planned features:
 - [ ] Custom currency creator
 - [ ] User trading
 
+For setup instructions read "IMPORTANT_README"
+
 [![CC BY-NC 4.0][cc-by-nc-image]][cc-by-nc]
 
 [![CC BY-NC 4.0][cc-by-nc-shield]][cc-by-nc]
