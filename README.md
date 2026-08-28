@@ -1,4 +1,4 @@
-# quick and dirty bot for role playing on discord!
+# quick and dirty bot for role playing for discord!
 ## basic bot intended to aid discord role playing groups
 
 Planned features:
