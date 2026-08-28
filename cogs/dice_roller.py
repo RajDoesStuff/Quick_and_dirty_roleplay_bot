@@ -41,21 +41,4 @@ def dice_roll(dice):
 
 # Advanced die roll - not done yet
 def advanced_dice_roll(expression):
-    result = read_dice_term(expression)
-    return result
-
-# Reading expressions - this is complete bullshit, no done yet, no clue what I'm doing here lmao
-def read_dice_term(term):
-    if "d" not in term:
-        return None
-    multiplier, dice_name = term.split("d", 1)
-    if multiplier == "":
-        multiplier = 1
-    else:
-        multiplier = int(multiplier)
-    dice_name = "d" + dice_name
-    dice = get_dice(dice_name)
-    if dice is None:
-        return None
-
-    return multiplier, dice
+    pass

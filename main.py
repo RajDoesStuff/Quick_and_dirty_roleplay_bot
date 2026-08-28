@@ -72,7 +72,6 @@ async def roll(interaction: discord.Interaction, dice:str):
 @bot.tree.command(name='rollplus', description='an advanced dice roll', guild=GUILD)
 async def roll_plus(interaction: discord.Interaction, expression:str):
     print(f"{interaction.user} run the 'rollplus' command!")
-    # result = advanced_dice_roll(expression)
     await interaction.response.send_message(f"not done yet o(╥﹏╥)o")
 
 
