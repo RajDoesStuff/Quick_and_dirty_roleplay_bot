@@ -6,7 +6,7 @@ import logging
 from dotenv import load_dotenv
 import os
 
-from cogs.dice_roller import dice_list, get_dice_list, dice_roll, advanced_dice_roll
+from cogs.dice_roller import dice_list, get_dice_list, dice_roll, get_operation, proficiency_bonus, get_dice
 from message_components import HelpComponent, RollComponent
 
 # Loading bot token and guild id
@@ -58,27 +58,49 @@ async def dice_list_out(interaction: discord.Interaction):
     get_dice_list_result = get_dice_list()
     await interaction.response.send_message(f"List of available dice:\n {get_dice_list_result }", ephemeral=True)
 
-# Performing a simple dice roll with a single die
-@bot.tree.command(name='roll', description='a simple dice roll', guild=GUILD)
-async def roll(interaction: discord.Interaction, dice:str):
+@bot.tree.command(name='roll', description='a simple dice roll with optional proficiency modifiers (+, -)', guild=GUILD)
+async def roll(interaction: discord.Interaction, dice:str, prof:str | None = None):
     print(f"{interaction.user} run the 'roll' command!")
-    for die in dice_list:
-        if die.name == dice:
-            dice_roll_result = dice_roll(die)
+    die = get_dice(dice)
 
-            break
-    else:
+    if die is None:
         await interaction.response.send_message("Invalid dice!", ephemeral=True)
+        print(f"{interaction.user} used an invalid dice!")
         return
 
-    roll_view = RollComponent(dice, dice_roll_result,interaction.user)
+    dice_roll_result = dice_roll(die)
+
+    if prof is not None:
+        print(f"{interaction.user} used a modifier!")
+        operation_type = prof[0]
+        chosen_operation = get_operation(operation_type)
+        operation_value = int(prof[1:5])
+
+        if chosen_operation is None:
+            print(f"{interaction.user} used an invalid operation type!")
+            await interaction.response.send_message("Invalid operation type!", ephemeral=True)
+            return
+        if operation_value is None:
+            print(f"{interaction.user} used an invalid value!")
+            await interaction.response.send_message("Invalid operation value!", ephemeral=True)
+        final_dice_roll_result = proficiency_bonus(chosen_operation, operation_value, dice_roll_result)
+        final_dice_roll_result_string = f"{prof}={final_dice_roll_result}"
+    else:
+        print(f"{interaction.user} didn't use a modifier!")
+        final_dice_roll_result = ""
+        final_dice_roll_result_string = ""
+
+    print(dice_roll_result)
+    print(final_dice_roll_result)
+
+    roll_view = RollComponent(dice, dice_roll_result, interaction.user, final_dice_roll_result_string)
     await interaction.response.send_message(view=roll_view)
 
-# Performing an advance dice roll - not done yet
-@bot.tree.command(name='rollplus', description='an advanced dice roll', guild=GUILD)
-async def roll_plus(interaction: discord.Interaction, expression:str):
-    print(f"{interaction.user} run the 'rollplus' command!")
-    await interaction.response.send_message("not done yet o(╥﹏╥)o")
+
+
+
+
+
 
 
 # Running the bot

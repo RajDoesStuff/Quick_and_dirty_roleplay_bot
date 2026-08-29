@@ -33,7 +33,7 @@ class HelpComponent(ui.LayoutView):
             ui.TextDisplay("/dice_list"),
             ui.TextDisplay("-# List out available dice"),
             ui.TextDisplay("/roll"),
-            ui.TextDisplay("-# Perform a basic dice roll with a single die"),
+            ui.TextDisplay("-# Perform a basic dice roll with a single die, optional proficiency modifier (+, -)"),
         )
         container.add_item(ui.TextDisplay("Hello, world! :3c"))
 
@@ -41,13 +41,13 @@ class HelpComponent(ui.LayoutView):
 
 # Simple roll component layout
 class RollComponent(ui.LayoutView):
-    def __init__(self, dice, dice_roll_result, user):
+    def __init__(self, dice, dice_roll_result, user, final_dice_roll_result_string):
         super().__init__()
 
         section = ui.Section(
             ui.TextDisplay(f"### {user.mention}"),
             ui.TextDisplay("### Rolled a dice!"),
-            ui.TextDisplay(f"### using {dice} \n ## rolled {dice_roll_result}!"),
+            ui.TextDisplay(f"### using {dice} \n ## rolled {dice_roll_result}{final_dice_roll_result_string}!"),
             accessory=ui.Thumbnail(
                 media=user.display_avatar.url,
             )

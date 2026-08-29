@@ -20,11 +20,30 @@ dice_list = [
     Dice("d100", 100),
 ]
 
+# Operation class
+class Operation:
+    def __init__(self, symbol):
+        self.symbol = symbol
+    def __str__(self):
+        return self.symbol
+
+operation_list = [
+    Operation("+"),
+    Operation("-"),
+]
+
+
 # Get single die info
 def get_dice(dice_name):
     for die in dice_list:
-        if die.name == dice.name:
+        if die.name == dice_name:
             return die
+    return None
+
+def get_operation(prof):
+    for operation in operation_list:
+        if operation.symbol == prof:
+            return operation
     return None
 
 # Get entire die list
@@ -39,6 +58,11 @@ def dice_roll(dice):
     roll = random.randint(1, dice.sides)
     return roll
 
-# Advanced die roll - not done yet
-def advanced_dice_roll(expression):
-    pass
+# Adding proficiency bonus to a roll
+def proficiency_bonus(chosen_operation, operation_value, dice_roll_result):
+    if chosen_operation.symbol == "+":
+        return dice_roll_result + operation_value
+    elif chosen_operation.symbol == "-":
+        return dice_roll_result - operation_value
+    else:
+        return None # This monstrosity is here because in the future I want to add more operations
