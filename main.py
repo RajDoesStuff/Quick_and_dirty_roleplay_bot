@@ -6,7 +6,7 @@ import logging
 from dotenv import load_dotenv
 import os
 
-from cogs.dice_roller import dice_list, get_dice_list, dice_roll, get_operation, proficiency_bonus, get_dice
+from cogs.dice_roller import get_dice_list, dice_roll, get_operation, proficiency_bonus, get_dice, get_max_side
 from message_components import HelpComponent, RollComponent
 
 # Loading bot token and guild id
@@ -58,42 +58,52 @@ async def dice_list_out(interaction: discord.Interaction):
     get_dice_list_result = get_dice_list()
     await interaction.response.send_message(f"List of available dice:\n {get_dice_list_result }", ephemeral=True)
 
-@bot.tree.command(name='roll', description='a simple dice roll with optional proficiency modifiers (+, -)', guild=GUILD)
+@bot.tree.command(name='roll', description='A simple dice roll with optional proficiency modifiers (+, -)', guild=GUILD)
 async def roll(interaction: discord.Interaction, dice:str, prof:str | None = None):
     print(f"{interaction.user} run the 'roll' command!")
     die = get_dice(dice)
-
+    die_max = get_max_side(die)
     if die is None:
         await interaction.response.send_message("Invalid dice!", ephemeral=True)
         print(f"{interaction.user} used an invalid dice!")
         return
 
     dice_roll_result = dice_roll(die)
+    nat_color = None
+    if dice_roll_result == 1:
+        nat_color = [209, 19, 19]
+    if dice_roll_result == die_max:
+        nat_color = [30, 212, 78]
 
     if prof is not None:
         print(f"{interaction.user} used a modifier!")
         operation_type = prof[0]
         chosen_operation = get_operation(operation_type)
-        operation_value = int(prof[1:5])
+        try:
+            operation_value = int(prof[1:5])
+            if operation_value is None:
+                print(f"{interaction.user} used an invalid value!")
+                await interaction.response.send_message("Invalid operation value!", ephemeral=True)
+        except ValueError:
+            print(f"{interaction.user} used an invalid value!")
+            await interaction.response.send_message("Invalid operation value!", ephemeral=True)
 
         if chosen_operation is None:
             print(f"{interaction.user} used an invalid operation type!")
             await interaction.response.send_message("Invalid operation type!", ephemeral=True)
             return
-        if operation_value is None:
-            print(f"{interaction.user} used an invalid value!")
-            await interaction.response.send_message("Invalid operation value!", ephemeral=True)
         final_dice_roll_result = proficiency_bonus(chosen_operation, operation_value, dice_roll_result)
+        prof = prof[0:5]
         final_dice_roll_result_string = f"{prof}={final_dice_roll_result}"
     else:
         print(f"{interaction.user} didn't use a modifier!")
         final_dice_roll_result = ""
         final_dice_roll_result_string = ""
-
+    sidebar_color = nat_color
     print(dice_roll_result)
     print(final_dice_roll_result)
 
-    roll_view = RollComponent(dice, dice_roll_result, interaction.user, final_dice_roll_result_string)
+    roll_view = RollComponent(dice, dice_roll_result, interaction.user, final_dice_roll_result_string, sidebar_color)
     await interaction.response.send_message(view=roll_view)
 
 

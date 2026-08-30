@@ -41,7 +41,7 @@ class HelpComponent(ui.LayoutView):
 
 # Simple roll component layout
 class RollComponent(ui.LayoutView):
-    def __init__(self, dice, dice_roll_result, user, final_dice_roll_result_string):
+    def __init__(self, dice, dice_roll_result, user, final_dice_roll_result_string, sidebar_color):
         super().__init__()
 
         section = ui.Section(
@@ -52,7 +52,14 @@ class RollComponent(ui.LayoutView):
                 media=user.display_avatar.url,
             )
         )
-        container = ui.Container(
-            section
-        )
+        if sidebar_color is not None:
+            container = ui.Container(
+                section,
+                accent_color=discord.Colour.from_rgb(*sidebar_color)
+            )
+        else:
+            container = ui.Container(
+                section
+            )
+
         self.add_item(container)

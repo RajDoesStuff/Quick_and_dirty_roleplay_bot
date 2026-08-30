@@ -27,10 +27,16 @@ class Operation:
     def __str__(self):
         return self.symbol
 
+# List of operations
 operation_list = [
     Operation("+"),
     Operation("-"),
 ]
+
+# Get the highest value of a die
+def get_max_side(dice):
+    die_max_side = dice.sides
+    return die_max_side
 
 
 # Get single die info
@@ -40,6 +46,7 @@ def get_dice(dice_name):
             return die
     return None
 
+# Get operation type
 def get_operation(prof):
     for operation in operation_list:
         if operation.symbol == prof:
