@@ -1,16 +1,7 @@
 # Quick and Dirty RolePlaying Bot!
 ## (QnDPR) basic bot intended to aid discord role playing and ttrpg groups
 
-Planned features:
-- [x] Basic dice rolling
-- [ ] Advanced dice rolling 
-- [ ] Character profiles
-- [ ] Location profiles
-- [ ] Custom items
-- [ ] Custom currencies
-- [ ] User trading
-- [ ] Game master role
-- [ ] Private thread opening for specified users and locations
+Dice rolls'o'plenty
 
 For setup instructions read "IMPORTANT_README"
 
