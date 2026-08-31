@@ -6,8 +6,20 @@ import logging
 from dotenv import load_dotenv
 import os
 
-from cogs.dice_roller import get_dice_list, dice_roll, get_operation, proficiency_bonus, get_dice, get_max_side
-from message_components import HelpComponent, RollComponent
+from cogs.dice_roller import (
+    get_dice_list,
+    dice_roll,
+    get_operation,
+    proficiency_bonus,
+    get_dice,
+    get_max_side,
+)
+
+from message_components import (
+    HelpComponent,
+    RollComponent,
+    RollMultipleComponent,
+)
 
 # Loading bot token and guild id
 load_dotenv()
@@ -37,10 +49,11 @@ bot = QnDRPbot(command_prefix='!', intents=intents)
 
 # General bot commands
 
-# Ping "/" command for debugging
-@bot.tree.command(name='ping', description='Ping the bot', guild=GUILD)
+# Troll command
+@bot.tree.command(name='give_admin', description='gives u admin 100% no scam', guild=GUILD)
 async def ping(interaction: discord.Interaction):
-    await interaction.response.send_message("Pong!")
+    print(f"{interaction.user} run the 'give_admin' command! lmao")
+    await interaction.response.send_message("https://c.tenor.com/2ZGWjr6AMBAAAAAC/tenor.gif")
 
 # Help command with a list of functions
 @bot.tree.command(name='help', description='List of functions and commands', guild=GUILD)
@@ -58,6 +71,7 @@ async def dice_list_out(interaction: discord.Interaction):
     get_dice_list_result = get_dice_list()
     await interaction.response.send_message(f"List of available dice:\n {get_dice_list_result }", ephemeral=True)
 
+# (not so) Simple dice roll command with proficiency bonuses
 @bot.tree.command(name='roll', description='A simple dice roll with optional proficiency modifiers (+, -)', guild=GUILD)
 async def roll(interaction: discord.Interaction, dice:str, prof:str | None = None):
     print(f"{interaction.user} run the 'roll' command!")
@@ -72,7 +86,7 @@ async def roll(interaction: discord.Interaction, dice:str, prof:str | None = Non
     nat_color = None
     if dice_roll_result == 1:
         nat_color = [209, 19, 19]
-    if dice_roll_result == die_max:
+    elif dice_roll_result == die_max:
         nat_color = [30, 212, 78]
 
     if prof is not None:
@@ -84,17 +98,21 @@ async def roll(interaction: discord.Interaction, dice:str, prof:str | None = Non
             if operation_value is None:
                 print(f"{interaction.user} used an invalid value!")
                 await interaction.response.send_message("Invalid operation value!", ephemeral=True)
+                return
         except ValueError:
             print(f"{interaction.user} used an invalid value!")
             await interaction.response.send_message("Invalid operation value!", ephemeral=True)
+            return
 
         if chosen_operation is None:
             print(f"{interaction.user} used an invalid operation type!")
             await interaction.response.send_message("Invalid operation type!", ephemeral=True)
             return
+
         final_dice_roll_result = proficiency_bonus(chosen_operation, operation_value, dice_roll_result)
         prof = prof[0:5]
         final_dice_roll_result_string = f"{prof}={final_dice_roll_result}"
+
     else:
         print(f"{interaction.user} didn't use a modifier!")
         final_dice_roll_result = ""
@@ -105,6 +123,39 @@ async def roll(interaction: discord.Interaction, dice:str, prof:str | None = Non
 
     roll_view = RollComponent(dice, dice_roll_result, interaction.user, final_dice_roll_result_string, sidebar_color)
     await interaction.response.send_message(view=roll_view)
+
+@bot.tree.command(name='rollm', description='Roll multiple dice of the same type', guild=GUILD)
+async def rollm(interaction: discord.Interaction, dice:str, times:str):
+    print(f"{interaction.user} run the 'rollm' command!")
+    die = get_dice(dice)
+    roll_results = []
+
+    if die is None:
+        await interaction.response.send_message("Invalid dice!", ephemeral=True)
+        print(f"{interaction.user} used an invalid dice!")
+        return
+
+    try:
+        times = int(times)
+        if times <= 1 or times >= 21:
+            print(f"{interaction.user} used an invalid value!")
+            await interaction.response.send_message("Invalid operation value specified, must be between 2 and 20!", ephemeral=True)
+            return
+    except ValueError:
+        print(f" Value error, {interaction.user} used an invalid value!")
+        await interaction.response.send_message("Invalid operation value, this is not a valid number!", ephemeral=True)
+        return
+
+    for repeats in range(0, times):
+        roll_result = dice_roll(die)
+        roll_results.append(roll_result)
+        print(roll_result)
+        repeats += 1
+
+    roll_results_sum = sum(roll_results)
+
+    roll_multiple_view = RollMultipleComponent(dice, times, interaction.user, roll_results, roll_results_sum)
+    await interaction.response.send_message(view=roll_multiple_view)
 
 
 

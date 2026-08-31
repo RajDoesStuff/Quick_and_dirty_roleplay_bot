@@ -34,8 +34,10 @@ class HelpComponent(ui.LayoutView):
             ui.TextDisplay("-# List out available dice"),
             ui.TextDisplay("/roll"),
             ui.TextDisplay("-# Perform a basic dice roll with a single die, optional proficiency modifier (+, -)"),
+            ui.TextDisplay("/rollm"),
+            ui.TextDisplay("-# Performs a specified amount of dice rolls on a chosen die")
         )
-        container.add_item(ui.TextDisplay("Hello, world! :3c"))
+        container.add_item(ui.TextDisplay("Hello, world! :3c made by raj"))
 
         self.add_item(container)  # Add container to the LayoutView
 
@@ -61,5 +63,24 @@ class RollComponent(ui.LayoutView):
             container = ui.Container(
                 section
             )
+
+        self.add_item(container)
+
+class RollMultipleComponent(ui.LayoutView):
+    def __init__(self, dice, times, user, roll_results, roll_results_sum,):
+        super().__init__()
+
+        section = ui.Section(
+            ui.TextDisplay(f"### {user.mention}"),
+            ui.TextDisplay(f"### Rolled a dice {times} times!"),
+            ui.TextDisplay(f"### using {dice} \n ## rolled {roll_results}! \n that sums up to {roll_results_sum}!"),
+            accessory=ui.Thumbnail(
+                media=user.display_avatar.url,
+            )
+        )
+
+        container = ui.Container(
+            section
+        )
 
         self.add_item(container)

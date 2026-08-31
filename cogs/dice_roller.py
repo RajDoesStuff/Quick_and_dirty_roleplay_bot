@@ -33,7 +33,7 @@ operation_list = [
     Operation("-"),
 ]
 
-# Get the highest value of a die
+# Get the highest value possible of a die roll
 def get_max_side(dice):
     die_max_side = dice.sides
     return die_max_side
