@@ -11,6 +11,7 @@ class Dice:
 
 # Die list dice(name, number of sides)
 dice_list = [
+    Dice("d3", 3),
     Dice("d4", 4),
     Dice("d6", 6),
     Dice("d8", 8),

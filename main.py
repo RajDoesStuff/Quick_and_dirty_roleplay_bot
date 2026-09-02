@@ -15,10 +15,15 @@ from cogs.dice_roller import (
     get_max_side,
 )
 
+from cogs.coin_flipper import (
+    coinflip
+)
+
 from message_components import (
     HelpComponent,
     RollComponent,
     RollMultipleComponent,
+    Roll2D6Component,
 )
 
 # Loading bot token and guild id
@@ -124,6 +129,7 @@ async def roll(interaction: discord.Interaction, dice:str, prof:str | None = Non
     roll_view = RollComponent(dice, dice_roll_result, interaction.user, final_dice_roll_result_string, sidebar_color)
     await interaction.response.send_message(view=roll_view)
 
+# Roll multiple dice of the same type and sum up the results
 @bot.tree.command(name='rollm', description='Roll multiple dice of the same type', guild=GUILD)
 async def rollm(interaction: discord.Interaction, dice:str, times:str):
     print(f"{interaction.user} run the 'rollm' command!")
@@ -157,7 +163,66 @@ async def rollm(interaction: discord.Interaction, dice:str, times:str):
     roll_multiple_view = RollMultipleComponent(dice, times, interaction.user, roll_results, roll_results_sum)
     await interaction.response.send_message(view=roll_multiple_view)
 
+# roll two d6 dice with optional modifiers, entire command is hastily and badly written, I will fix it up later
+# oh yea it works but barely, component is FUCKED, but I don't care
+@bot.tree.command(name='2d6', description='Roll 2d6 with optional proficiency modifiers (+, -)', guild=GUILD)
+async def roll2d6(interaction: discord.Interaction, prof: str | None = None):
+    print(f"{interaction.user} run the '2d6' command!")
 
+    die = get_dice("d6") #I know this is hacky, but I don't care, I'll make it better later.
+    dice = "2d6"
+    roll_results = []
+
+    for _ in range(2):
+        roll_result = dice_roll(die)
+        roll_results.append(roll_result)
+        print(roll_result)
+
+    dice_roll_result = sum(roll_results) # this is also hacky, but I don't care either, ctrl+c ctrl+v go brrrr
+
+    if prof is not None:
+        print(f"{interaction.user} used a modifier!")
+        operation_type = prof[0]
+        chosen_operation = get_operation(operation_type)
+        try:
+            operation_value = int(prof[1:5])
+            if operation_value is None:
+                print(f"{interaction.user} used an invalid value!")
+                await interaction.response.send_message("Invalid operation value!", ephemeral=True)
+                return
+        except ValueError:
+            print(f"{interaction.user} used an invalid value!")
+            await interaction.response.send_message("Invalid operation value!", ephemeral=True)
+            return
+
+        if chosen_operation is None:
+            print(f"{interaction.user} used an invalid operation type!")
+            await interaction.response.send_message("Invalid operation type!", ephemeral=True)
+            return
+
+        final_dice_roll_result = proficiency_bonus(chosen_operation, operation_value, dice_roll_result)
+        prof = prof[0:5]
+        final_dice_roll_result_string = f"{prof} = {final_dice_roll_result}"
+        print(prof)
+        print(final_dice_roll_result)
+
+
+    else:
+        print(dice_roll_result)
+        final_dice_roll_result_string = dice_roll_result
+
+
+    roll_2d6_view = Roll2D6Component(dice, final_dice_roll_result_string, interaction.user, roll_results)
+    await interaction.response.send_message(view=roll_2d6_view)
+
+# coinflip related commands
+
+# Simple coinflip
+@bot.tree.command(name='flip', description='simple coin flip', guild=GUILD)
+async def coinflip_command(interaction: discord.Interaction):
+    coinflip_result = coinflip()
+    print(coinflip_result)
+    await interaction.response.send_message(f"Coin flipped!, it landed on {coinflip_result}")
 
 
 

@@ -84,3 +84,22 @@ class RollMultipleComponent(ui.LayoutView):
         )
 
         self.add_item(container)
+
+class Roll2D6Component(ui.LayoutView):
+    def __init__(self, dice, roll_results, user, final_dice_roll_result_string):
+        super().__init__()
+
+        section = ui.Section(
+            ui.TextDisplay(f"### {user.mention}"),
+            ui.TextDisplay("### Rolled a dice!"),
+            ui.TextDisplay(f"### using {dice} \n ## rolled {final_dice_roll_result_string} {roll_results} !"),
+            accessory=ui.Thumbnail(
+                media=user.display_avatar.url,
+            )
+        )
+        container = ui.Container(
+            section
+        )
+
+
+        self.add_item(container)
