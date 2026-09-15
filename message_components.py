@@ -34,7 +34,7 @@ class HelpComponent(ui.LayoutView):
             ui.TextDisplay("-# List out available dice"),
             ui.TextDisplay("/roll"),
             ui.TextDisplay("-# Perform a basic dice roll with a single die, optional proficiency modifier (+, -)"),
-            ui.TextDisplay("/rollm"),
+            ui.TextDisplay("/mroll"),
             ui.TextDisplay("-# Performs a specified amount of dice rolls on a chosen die")
         )
         container.add_item(ui.TextDisplay("Hello, world! :3c made by raj"))
@@ -67,13 +67,13 @@ class RollComponent(ui.LayoutView):
         self.add_item(container)
 
 class RollMultipleComponent(ui.LayoutView):
-    def __init__(self, dice, times, user, roll_results, roll_results_sum,):
+    def __init__(self, dice, times, user, roll_results, final_dice_roll_result_string):
         super().__init__()
 
         section = ui.Section(
             ui.TextDisplay(f"### {user.mention}"),
             ui.TextDisplay(f"### Rolled a dice {times} times!"),
-            ui.TextDisplay(f"### using {dice} \n ## rolled {roll_results}! \n that sums up to {roll_results_sum}!"),
+            ui.TextDisplay(f"### using {dice} \n ## rolled {roll_results}! \n that sums up to {final_dice_roll_result_string}!"),
             accessory=ui.Thumbnail(
                 media=user.display_avatar.url,
             )
@@ -86,13 +86,13 @@ class RollMultipleComponent(ui.LayoutView):
         self.add_item(container)
 
 class Roll2D6Component(ui.LayoutView):
-    def __init__(self, dice, roll_results, user, final_dice_roll_result_string):
+    def __init__(self, roll_results, user, final_dice_roll_result_string):
         super().__init__()
 
         section = ui.Section(
             ui.TextDisplay(f"### {user.mention}"),
             ui.TextDisplay("### Rolled a dice!"),
-            ui.TextDisplay(f"### using {dice} \n ## rolled {final_dice_roll_result_string} {roll_results} !"),
+            ui.TextDisplay(f"### using 2d6 \n ## rolled {final_dice_roll_result_string}! \n that sums up to {roll_results}!"),
             accessory=ui.Thumbnail(
                 media=user.display_avatar.url,
             )
