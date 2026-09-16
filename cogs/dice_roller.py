@@ -1,7 +1,6 @@
 # Dice roller
 import random
 import logging
-from operator import truediv
 
 
 

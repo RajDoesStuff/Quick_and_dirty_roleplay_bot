@@ -82,7 +82,7 @@ class QnDRPbot(commands.Bot):
 # DO NOT touch this unless you want to break stuff
 bot = QnDRPbot(command_prefix='!', intents=intents)
 
-#sending messages
+# Sending messages
 async def sendMessageToRecipient(roll_view, user, silent, interaction):
     if silent:
         channel = await user.create_dm()
@@ -100,6 +100,7 @@ async def sendMessageToRecipient(roll_view, user, silent, interaction):
                 await channel.send(view=roll_view)
     else:
         await interaction.response.send_message(view=roll_view)
+        bot_logger.debug("message sent!")
 
 # General bot commands and testing related commands
 # Troll command

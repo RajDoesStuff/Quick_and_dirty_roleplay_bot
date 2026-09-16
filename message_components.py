@@ -33,7 +33,9 @@ class HelpComponent(ui.LayoutView):
             ui.TextDisplay("/roll"),
             ui.TextDisplay("-# Perform a basic dice roll with a single die, optional proficiency modifier (+, -)"),
             ui.TextDisplay("/mroll"),
-            ui.TextDisplay("-# Performs a specified amount of dice rolls on a chosen die")
+            ui.TextDisplay("-# Performs a specified amount of dice rolls on a chosen die"),
+            ui.TextDisplay("/flip"),
+            ui.TextDisplay("-# Performs a simple coin flip"),
         )
         container.add_item(ui.TextDisplay("Hello, world! :3c made by raj"))
 
@@ -54,9 +56,7 @@ class RollComponent(ui.LayoutView):
         )
         if sidebar_color is not None:
             container = ui.Container(
-                section,
-                accent_color=discord.Colour.from_rgb(*sidebar_color)
-            )
+                section,accent_color=discord.Colour.from_rgb(*sidebar_color))
         else:
             container = ui.Container(
                 section
@@ -72,9 +72,7 @@ class RollMultipleComponent(ui.LayoutView):
             ui.TextDisplay(f"### {user.mention}"),
             ui.TextDisplay(f"### Rolled a dice {times} times!"),
             ui.TextDisplay(f"### using {dice} \n ## rolled {roll_results}! \n that sums up to {final_dice_roll_result_string}!"),
-            accessory=ui.Thumbnail(
-                media=user.display_avatar.url,
-            )
+            accessory=ui.Thumbnail(media=user.display_avatar.url,)
         )
 
         container = ui.Container(
