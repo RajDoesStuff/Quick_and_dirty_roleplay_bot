@@ -30,7 +30,6 @@ from message_components import (
     HelpComponent,
     RollComponent,
     RollMultipleComponent,
-    Roll2D6Component,
 )
 
 # Loading bot token and guild id
@@ -85,8 +84,26 @@ class QnDRPbot(commands.Bot):
 # DO NOT touch this unless you want to break stuff
 bot = QnDRPbot(command_prefix='!', intents=intents)
 
-# General bot commands
+#sending messages
+async def sendMessageToRecipient(roll_view, user, silent, interaction):
+    if silent:
+        channel = await user.create_dm()
+        await interaction.response.send_message("your dice roll result has been sent to you in a private message!", ephemeral=True)
+        await channel.send(view=roll_view)
+        bot_logger.info("silent message sent!")
 
+        role_id = int(os.getenv("GAME_MASTER_ROLE_ID"))
+        for member in interaction.guild.members:
+            if member == user:
+                continue
+
+            if any(role.id == role_id for role in member.roles):
+                channel = await member.create_dm()
+                await channel.send(view=roll_view)
+    else:
+        await interaction.response.send_message(view=roll_view)
+
+# General bot commands and testing related commands
 # Troll command
 @bot.tree.command(name='give_admin', description='gives u admin 100% no scam', guild=GUILD)
 async def give_admin_command(interaction: discord.Interaction):
@@ -109,11 +126,11 @@ async def dice_list_out(interaction: discord.Interaction):
     get_dice_list_result = get_dice_list()
     await interaction.response.send_message(f"List of available dice:\n {get_dice_list_result }", ephemeral=True)
 
-# (not so) Simple dice roll command with proficiency bonuses
+# Simple dice roll command with proficiency bonuses
 @bot.tree.command(name='roll', description='A simple dice roll with optional proficiency modifiers (+, -)', guild=GUILD)
-async def simple_roll_command(interaction: discord.Interaction, dice:str, prof:str | None = None):
+async def simple_roll_command(interaction: discord.Interaction, dice:str, prof:str | None = None, silent:bool = False):
     bot_logger.info(f"{interaction.user} run the 'roll' command!")
-    bot_logger.debug(f"{interaction.user} input - Dice: {dice} Prof: {prof}")
+    bot_logger.debug(f"{interaction.user} input - Dice: {dice} Prof: {prof} is silent: {silent}")
 
     # Die validation
     die = get_dice(dice)
@@ -164,13 +181,14 @@ async def simple_roll_command(interaction: discord.Interaction, dice:str, prof:s
 
     # Message component
     roll_view = RollComponent(dice, dice_roll_result, interaction.user, final_dice_roll_result_string, sidebar_color)
-    await interaction.response.send_message(view=roll_view)
+    await sendMessageToRecipient(roll_view, interaction.user, silent, interaction)
+
 
 # Roll multiple dice of the same type and sum up the results
 @bot.tree.command(name='mroll', description='Roll multiple dice of the same type', guild=GUILD)
-async def roll_multiple_command(interaction: discord.Interaction, dice:str, times:str, prof:str | None = None):
+async def roll_multiple_command(interaction: discord.Interaction, dice:str, times:str, prof:str | None = None, silent:bool = False):
     bot_logger.info(f"{interaction.user} run the 'mroll' command!")
-    bot_logger.debug(f"{interaction.user} input - Dice: {dice} Times: {times}")
+    bot_logger.debug(f"{interaction.user} input - Dice: {dice} Times: {times} Prof: {prof} is silent: {silent}")
 
     # Die validation
     die = get_dice(dice)
@@ -222,14 +240,15 @@ async def roll_multiple_command(interaction: discord.Interaction, dice:str, time
     else:
         final_dice_roll_result_string = roll_results_sum
 
-    roll_multiple_view = RollMultipleComponent(dice, times, interaction.user, roll_results, final_dice_roll_result_string)
-    await interaction.response.send_message(view=roll_multiple_view)
+    roll_view = RollMultipleComponent(dice, times, interaction.user, roll_results, final_dice_roll_result_string)
+    await sendMessageToRecipient(roll_view, interaction.user, silent, interaction)
 
 # roll two d6 dice with optional modifiers, entire command is hastily and badly written, I will fix it up later
 # oh yea it works but barely, component is FUCKED, but I don't care
 @bot.tree.command(name='2d6', description='Roll 2d6 with optional proficiency modifiers (+, -)', guild=GUILD)
-async def roll2d6_command(interaction: discord.Interaction, prof: str | None = None):
+async def roll2d6_command(interaction: discord.Interaction, prof: str | None = None, silent:bool = False):
     bot_logger.info(f"{interaction.user} run the '2d6' command!")
+    bot_logger.debug(f"{interaction.user} Prof: {prof} is silent: {silent}")
 
     die = get_dice("d6") #I know this is hacky, but I don't care, I'll make it better later.
     dice = "d6"
@@ -270,10 +289,11 @@ async def roll2d6_command(interaction: discord.Interaction, prof: str | None = N
     else:
         final_dice_roll_result_string = roll_results_sum
 
-    roll_multiple_view = RollMultipleComponent(dice, times, interaction.user, roll_results, final_dice_roll_result_string)
-    await interaction.response.send_message(view=roll_multiple_view)
+    roll_view = RollMultipleComponent(dice, times, interaction.user, roll_results, final_dice_roll_result_string)
+    await sendMessageToRecipient(roll_view, interaction.user, silent, interaction)
 
-    # Coin flip related commands
+
+# Coin flip related commands
 
 # Simple coinflip
 @bot.tree.command(name='flip', description='simple coin flip', guild=GUILD)

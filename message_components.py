@@ -1,6 +1,6 @@
 # Message components that make bot responses look nicer
-# Some imports are not used yet, don't touch them please, they will be utilized at some point
 
+# Some imports are not used yet, don't touch them please, they will be utilized at some point
 import discord
 from discord.ext import commands
 from discord import ui
@@ -17,8 +17,6 @@ from discord.ui import (
     Select,
 )
 from discord import SelectOption
-
-from cogs.dice_roller import dice_roll
 
 # Help component layout
 class HelpComponent(ui.LayoutView):
@@ -82,24 +80,5 @@ class RollMultipleComponent(ui.LayoutView):
         container = ui.Container(
             section
         )
-
-        self.add_item(container)
-
-class Roll2D6Component(ui.LayoutView):
-    def __init__(self, roll_results, user, final_dice_roll_result_string):
-        super().__init__()
-
-        section = ui.Section(
-            ui.TextDisplay(f"### {user.mention}"),
-            ui.TextDisplay("### Rolled a dice!"),
-            ui.TextDisplay(f"### using 2d6 \n ## rolled {final_dice_roll_result_string}! \n that sums up to {roll_results}!"),
-            accessory=ui.Thumbnail(
-                media=user.display_avatar.url,
-            )
-        )
-        container = ui.Container(
-            section
-        )
-
 
         self.add_item(container)
