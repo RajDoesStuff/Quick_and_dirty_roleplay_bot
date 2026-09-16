@@ -64,8 +64,6 @@ else:
     bot_logger.setLevel(logging.INFO)
     bot_logger.info("Debug mode off")
 
-
-
 # Setting bot intents (aka permissions)
 intents = discord.Intents.default()
 intents.message_content = True

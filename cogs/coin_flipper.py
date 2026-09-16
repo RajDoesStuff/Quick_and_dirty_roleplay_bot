@@ -3,11 +3,15 @@
 import random
 
 def coinflip():
-    flip_result = random.randint(0, 1)
-    print (flip_result)
-    if flip_result == 1:
-        flip_result = "heads"
-        return flip_result
+    poop_value = random.randint(0, 299) #I am the poopster, very mature poopster
+    if poop_value == 299:
+        return "it's side, fuck you"
     else:
-        flip_result = "tails"
-        return flip_result
+        flip_result = random.randint(0, 1)
+        print (flip_result)
+        if flip_result == 1:
+            flip_result = "heads"
+            return flip_result
+        else:
+            flip_result = "tails"
+            return flip_result
